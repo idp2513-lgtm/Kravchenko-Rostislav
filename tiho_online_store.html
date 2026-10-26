@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="uk" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ТИХО — Одяг та взуття для себе</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cormorant Garamond for elegant serif titles, Inter for clean modern body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#F9F6F0',
+                            card: '#F4EFE6',
+                            box: '#EAE4D9',
+                            dark: '#1F1C1A',
+                            accent: '#6B3A2A',
+                            text: '#2B2623',
+                            muted: '#7A726A',
+                            border: '#E2DAD0'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F9F6F0;
+            color: #2B2623;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, .font-serif-custom {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F4EFE6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #C4B9AA;
+            border-radius: 3px;
+        }
+        .color-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .color-dot:hover {
+            transform: scale(1.3);
+        }
+        /* Modal Backdrops */
+        .backdrop-blur-custom {
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-accent selection:text-white">
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="bg-brand-dark text-white text-center py-2 px-4 text-xs font-light tracking-wide flex justify-center items-center gap-2">
+        <span>Доставка на ваш рахунок від 4 000 ₴</span>
+        <span class="opacity-40">•</span>
+        <span>Повернення протягом 14 днів</span>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header class="sticky top-0 z-30 bg-[#F9F6F0]/90 backdrop-blur-md border-b border-brand-border/60 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Mobile Menu Toggle -->
+            <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-brand-dark hover:text-brand-accent focus:outline-none">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+
+            <!-- Navigation Links Left (Desktop) -->
+            <nav class="hidden lg:flex items-center gap-8 text-sm font-medium tracking-wide">
+                <a href="#new" class="hover:text-brand-accent transition-colors">Новинки</a>
+                <a href="#women" class="hover:text-brand-accent transition-colors">Жінкам</a>
+                <a href="#men" class="hover:text-brand-accent transition-colors">Чоловікам</a>
+                <a href="#footwear" class="hover:text-brand-accent transition-colors">Взуття</a>
+                <a href="#collections" class="hover:text-brand-accent transition-colors">Добірки</a>
+            </nav>
+
+            <!-- Centered Logo -->
+            <a href="#" class="font-serif-custom text-3xl sm:text-4xl font-semibold tracking-widest text-brand-dark text-center">
+                ТИХО
+            </a>
+
+            <!-- Header Action Icons Right -->
+            <div class="flex items-center gap-5 sm:gap-6 text-brand-dark">
+                <button onclick="toggleSearchModal()" class="hover:text-brand-accent transition-colors flex items-center gap-2 text-sm">
+                    <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    <span class="hidden md:inline font-light text-xs opacity-75">Знайти своє</span>
+                </button>
+                <button onclick="openToast('Особистий кабінет буде доступний незабаром')" class="hover:text-brand-accent transition-colors hidden sm:block">
+                    <i class="fa-regular fa-user text-lg"></i>
+                </button>
+                <button onclick="toggleWishlistDrawer()" class="hover:text-brand-accent transition-colors relative">
+                    <i class="fa-regular fa-heart text-lg"></i>
+                    <span id="wishlist-count" class="hidden absolute -top-2 -right-2 bg-brand-accent text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                </button>
+                <button onclick="toggleCartDrawer()" class="hover:text-brand-accent transition-colors relative flex items-center gap-1.5 bg-brand-card px-3 py-1.5 rounded-full border border-brand-border">
+                    <i class="fa-solid fa-bag-shopping text-base"></i>
+                    <span id="cart-count" class="text-xs font-semibold">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE NAVIGATION DRAWER -->
+    <div id="mobile-menu" class="fixed inset-0 bg-brand-dark/50 z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="fixed top-0 left-0 w-4/5 max-w-xs h-full bg-brand-bg p-6 shadow-2xl flex flex-col justify-between transform -translate-x-full transition-transform duration-300 id-mobile-panel">
+            <div>
+                <div class="flex items-center justify-between pb-6 border-b border-brand-border">
+                    <span class="font-serif-custom text-2xl font-bold">ТИХО</span>
+                    <button onclick="toggleMobileMenu()" class="p-2 text-brand-dark">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+                <nav class="flex flex-col gap-5 py-6 text-base font-medium">
+                    <a href="#new" onclick="toggleMobileMenu()" class="hover:text-brand-accent">Новинки</a>
+                    <a href="#women" onclick="toggleMobileMenu()" class="hover:text-brand-accent">Жінкам</a>
+                    <a href="#men" onclick="toggleMobileMenu()" class="hover:text-brand-accent">Чоловікам</a>
+                    <a href="#footwear" onclick="toggleMobileMenu()" class="hover:text-brand-accent">Взуття</a>
+                    <a href="#collections" onclick="toggleMobileMenu()" class="hover:text-brand-accent">Добірки</a>
+                    <a href="#about" onclick="toggleMobileMenu()" class="hover:text-brand-accent">Про бренд</a>
+                    <a href="#journal" onclick="toggleMobileMenu()" class="hover:text-brand-accent">Журнал</a>
+                </nav>
+            </div>
+            <div class="border-t border-brand-border pt-6 text-xs text-brand-muted space-y-2">
+                <p class="font-semibold text-brand-dark">+38 (067) 410 20 26</p>
+                <p>Щодня: 10:00-19:00</p>
+            </div>
+        </div>
+    </div>
+
+    <main class="flex-grow">
+
+        <!-- SECTION 1: HERO SLIDER -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-brand-bg">
+                
+                <!-- Hero Left Content -->
+                <div class="lg:col-span-5 flex flex-col justify-between space-y-8 pr-0 lg:pr-6">
+                    <div class="space-y-4">
+                        <span class="text-xs tracking-widest text-brand-accent font-semibold uppercase block">
+                            НОВА КОЛЕКЦІЯ | ОСІНЬ — ЗИМА 2026
+                        </span>
+                        <h1 class="text-4xl sm:text-6xl font-normal leading-tight tracking-tight text-brand-dark font-serif-custom" id="hero-title">
+                            Мистецтво бути собою.
+                        </h1>
+                        <p class="text-brand-muted text-sm sm:text-base leading-relaxed font-light" id="hero-subtitle">
+                            М'які фактури. Вільні силуети. Речі, у яких комфортно бути — щодня, всюди, по-своєму.
+                        </p>
+                    </div>
+
+                    <div class="pt-2">
+                        <button onclick="scrollToCatalog()" class="inline-flex items-center gap-3 bg-brand-accent text-white px-7 py-3.5 rounded-sm hover:bg-brand-dark transition-colors duration-300 text-sm font-medium">
+                            <span>Відкрити колекцію</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-8 border-t border-brand-border/60 text-xs text-brand-muted tracking-wider">
+                        <span>МЕНШЕ ШУМУ. БІЛЬШЕ ВАС.</span>
+                        <div class="flex items-center gap-3 font-medium">
+                            <button onclick="prevHeroSlide()" class="hover:text-brand-dark"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+                            <span id="slide-counter">01 / 03</span>
+                            <button onclick="nextHeroSlide()" class="hover:text-brand-dark"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Right Image Frame -->
+                <div class="lg:col-span-7 relative group">
+                    <div class="aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/4] overflow-hidden rounded-xs bg-brand-card relative">
+                        <img id="hero-image" src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=1200" alt="Пальто з вовною Лінія" class="w-full h-full object-cover object-top transition-all duration-700">
+                        
+                        <!-- Floating Tag Card on Hero Image -->
+                        <div onclick="openQuickView(1)" class="cursor-pointer absolute bottom-6 left-6 right-6 sm:right-auto sm:max-w-xs bg-white/95 backdrop-blur-sm p-4 shadow-lg border border-brand-border hover:bg-white transition-all flex items-center justify-between gap-4 group/tag">
+                            <div>
+                                <p id="hero-tag-title" class="text-xs font-semibold text-brand-dark">Пальто з вовною «Лінія»</p>
+                                <p id="hero-tag-price" class="text-xs text-brand-muted mt-0.5">7 900 ₴ — До образу</p>
+                            </div>
+                            <span class="w-8 h-8 rounded-full bg-brand-bg flex items-center justify-center text-brand-dark group-hover/tag:bg-brand-accent group-hover/tag:text-white transition-colors">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2: CATEGORIES ("Знайдіть своє") -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <div class="mb-8">
+                <span class="text-xs tracking-widest text-brand-accent uppercase font-medium">ВАШ ГАРДЕРOБ, ВАШІ ПРАВИЛА</span>
+                <h2 class="text-3xl sm:text-5xl font-serif-custom font-normal text-brand-dark mt-1">Знайдіть своє</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Category 1 -->
+                <div onclick="filterCategory('women')" class="group cursor-pointer">
+                    <div class="aspect-[3/4] overflow-hidden bg-brand-card mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800" alt="Жінкам" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-2xl font-serif-custom text-brand-dark">Жінкам</h3>
+                            <p class="text-xs text-brand-muted">Свобода в кожній лінії</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-brand-dark group-hover:text-brand-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
+                    </div>
+                </div>
+
+                <!-- Category 2 -->
+                <div onclick="filterCategory('men')" class="group cursor-pointer">
+                    <div class="aspect-[3/4] overflow-hidden bg-brand-card mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800" alt="Чоловікам" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-2xl font-serif-custom text-brand-dark">Чоловікам</h3>
+                            <p class="text-xs text-brand-muted">Простота з характером</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-brand-dark group-hover:text-brand-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
+                    </div>
+                </div>
+
+                <!-- Category 3 -->
+                <div onclick="filterCategory('footwear')" class="group cursor-pointer">
+                    <div class="aspect-[3/4] overflow-hidden bg-brand-card mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=80&w=800" alt="Взуття" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-2xl font-serif-custom text-brand-dark">Взуття</h3>
+                            <p class="text-xs text-brand-muted">Власний ритм міста</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-brand-dark group-hover:text-brand-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: CATALOG GRID ("Новий сезон починається тут") -->
+        <section id="catalog-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-brand-border/40">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <span class="text-xs tracking-widest text-brand-accent uppercase font-medium block mb-1">ЩОЙНО В КОЛЕКЦІЇ</span>
+                    <h2 class="text-3xl sm:text-5xl font-serif-custom font-normal text-brand-dark">Новий сезон починається тут</h2>
+                </div>
+                
+                <!-- Category Tabs -->
+                <div class="flex items-center gap-6 overflow-x-auto pb-2 md:pb-0 text-sm">
+                    <button onclick="filterProducts('all')" class="tab-btn font-medium border-b-2 border-brand-dark pb-1 text-brand-dark whitespace-nowrap active-tab" data-filter="all">Усе</button>
+                    <button onclick="filterProducts('clothes')" class="tab-btn font-medium border-b-2 border-transparent hover:border-brand-muted text-brand-muted hover:text-brand-dark pb-1 whitespace-nowrap" data-filter="clothes">Одяг</button>
+                    <button onclick="filterProducts('footwear')" class="tab-btn font-medium border-b-2 border-transparent hover:border-brand-muted text-brand-muted hover:text-brand-dark pb-1 whitespace-nowrap" data-filter="footwear">Взуття</button>
+                    <button onclick="filterProducts('accessories')" class="tab-btn font-medium border-b-2 border-transparent hover:border-brand-muted text-brand-muted hover:text-brand-dark pb-1 whitespace-nowrap" data-filter="accessories">Аксесуари</button>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Dynamically Inserted Products -->
+            </div>
+        </section>
+
+        <!-- SECTION 4: FEATURE "Місто. Кава. Ваш темп." -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 overflow-hidden rounded-xs border border-brand-border">
+                
+                <!-- Left Image -->
+                <div class="lg:col-span-7 relative min-h-[380px] lg:min-h-[500px]">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=1200" alt="Місто Кава" class="w-full h-full object-cover">
+                    <div class="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm px-4 py-2 text-xs font-semibold tracking-wider text-brand-dark">
+                        ТИХО / МІСЬКІ ІСТОРІЇ
+                    </div>
+                </div>
+
+                <!-- Right Styled Text Box -->
+                <div class="lg:col-span-5 bg-brand-card p-8 sm:p-12 lg:p-16 flex flex-col justify-between space-y-8">
+                    <div>
+                        <div class="flex justify-between items-center text-xs text-brand-muted tracking-widest uppercase mb-6">
+                            <span class="text-brand-accent font-semibold">У ФОКУСІ</span>
+                            <span>№ 01 — 2026</span>
+                        </div>
+                        <h2 class="text-4xl sm:text-5xl font-serif-custom font-normal text-brand-dark leading-tight mb-4">
+                            Місто.<br>Кава.<br>Ваш темп.
+                        </h2>
+                        <p class="text-brand-muted text-sm leading-relaxed">
+                            Для ранків без поспіху та планів без меж. Сім речей, що легко поєднуються між собою — і з вашим життям.
+                        </p>
+                    </div>
+
+                    <div>
+                        <button onclick="openToast('Добірка «Місто. Кава» завантажується...')" class="inline-flex items-center gap-2 border-b border-brand-dark pb-1 text-sm font-medium hover:text-brand-accent hover:border-brand-accent transition-colors mb-8">
+                            <span>Переглянути добірку</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                        </button>
+
+                        <div class="flex flex-wrap gap-2 text-xs text-brand-muted pt-4 border-t border-brand-border/60">
+                            <span>Пальто</span> • <span>Трикотаж</span> • <span>Брюки</span> • <span>Лофери</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 5: FOOTWEAR FEATURE ("Почніть із правильного кроку") -->
+        <section id="footwear" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <span class="text-xs tracking-widest text-brand-accent uppercase font-medium block mb-1">ОПОРА ДЛЯ КОЖНОГО ДНЯ</span>
+                    <h2 class="text-3xl sm:text-5xl font-serif-custom font-normal text-brand-dark">Почніть із правильного кроку</h2>
+                </div>
+                <button onclick="filterProducts('footwear')" class="hidden sm:inline-flex items-center gap-2 text-xs font-semibold tracking-wider hover:text-brand-accent border-b border-brand-dark pb-0.5">
+                    Усе взуття <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                <!-- Large Feature Image Left -->
+                <div class="lg:col-span-6 relative group overflow-hidden bg-brand-card min-h-[350px]">
+                    <img src="https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&q=80&w=900" alt="Взуття деталі" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm px-6 py-3 border border-brand-border">
+                        <span class="text-lg font-serif-custom font-medium text-brand-dark">Впевненість у деталях.</span>
+                    </div>
+                </div>
+
+                <!-- Footwear Product Cards Right -->
+                <div id="footwear-grid" class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Dynamically filled with footwear items -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: BRAND STORY ("Знайомтеся, ТИХО") -->
+        <section id="about" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 my-8 bg-brand-card rounded-xs">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                <div class="lg:col-span-5">
+                    <div class="aspect-[4/5] overflow-hidden rounded-xs bg-brand-bg shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=800" alt="Про бренд ТИХО" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="lg:col-span-7 space-y-6 lg:pl-6">
+                    <span class="text-xs tracking-widest text-brand-accent uppercase font-semibold">ЗНАЙОМТЕСЯ, ТИХО</span>
+                    <h2 class="text-3xl sm:text-5xl font-serif-custom font-normal text-brand-dark leading-tight">
+                        Не більше речей.<br>Більше улюблених.
+                    </h2>
+                    <p class="text-brand-muted text-sm sm:text-base leading-relaxed font-light max-w-xl">
+                        Ми — український бренд одягу та взуття для життя поза трендами. Обираємо приємні до тіла матеріали, вивірений крій і кольори, які легко знаходять спільну мову. Щоб кожна річ залишалася з вами ненадовго, а на роки.
+                    </p>
+                    <div class="pt-4">
+                        <button onclick="openToast('Історія бренду готується до публікації')" class="inline-flex items-center gap-2 border-b-2 border-brand-dark pb-1 text-sm font-semibold hover:text-brand-accent hover:border-brand-accent transition-colors">
+                            <span>Наша історія</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: JOURNAL / BLOG ("Тихі нотатки") -->
+        <section id="journal" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <span class="text-xs tracking-widest text-brand-accent uppercase font-medium block mb-1">ІСТОРІЇ, ДО ЯКИХ ХОЧЕТЬСЯ ПОВЕРТАТИСЯ</span>
+                    <h2 class="text-3xl sm:text-5xl font-serif-custom font-normal text-brand-dark">Тихі нотатки</h2>
+                </div>
+                <button onclick="openToast('Розділ Журналу в розробці')" class="hidden sm:inline-flex items-center gap-2 text-xs font-semibold tracking-wider hover:text-brand-accent border-b border-brand-dark pb-0.5">
+                    До журналу <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Article 1 -->
+                <article class="group cursor-pointer" onclick="openToast('Відкриваємо статтю «Один светр. П\'ять настроїв»')">
+                    <div class="aspect-[16/11] overflow-hidden bg-brand-card mb-4">
+                        <img src="https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&q=80&w=800" alt="Один светр" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="flex justify-between text-[11px] text-brand-muted uppercase tracking-wider mb-2">
+                        <span>СТИЛЬ</span>
+                        <span>4 хв читання</span>
+                    </div>
+                    <h3 class="text-xl font-serif-custom font-medium text-brand-dark group-hover:text-brand-accent transition-colors flex justify-between items-start">
+                        <span>Один светр. П'ять настроїв.</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </h3>
+                </article>
+
+                <!-- Article 2 -->
+                <article class="group cursor-pointer" onclick="openToast('Відкриваємо статтю «Як зберегти тепло»')">
+                    <div class="aspect-[16/11] overflow-hidden bg-brand-card mb-4">
+                        <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&q=80&w=800" alt="Догляд за одягом" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="flex justify-between text-[11px] text-brand-muted uppercase tracking-wider mb-2">
+                        <span>ДОГЛЯД</span>
+                        <span>3 хв читання</span>
+                    </div>
+                    <h3 class="text-xl font-serif-custom font-medium text-brand-dark group-hover:text-brand-accent transition-colors flex justify-between items-start">
+                        <span>Як зберегти тепло улюблених речей</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </h3>
+                </article>
+
+                <!-- Article 3 -->
+                <article class="group cursor-pointer" onclick="openToast('Відкриваємо статтю «Вихідний у місті»')">
+                    <div class="aspect-[16/11] overflow-hidden bg-brand-card mb-4">
+                        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=800" alt="Вихідний у місті" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="flex justify-between text-[11px] text-brand-muted uppercase tracking-wider mb-2">
+                        <span>НАТХНЕННЯ</span>
+                        <span>5 хв читання</span>
+                    </div>
+                    <h3 class="text-xl font-serif-custom font-medium text-brand-dark group-hover:text-brand-accent transition-colors flex justify-between items-start">
+                        <span>Вихідний у місті: без зайвих планів</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </h3>
+                </article>
+            </div>
+        </section>
+
+        <!-- SECTION 8: BENEFITS BAR -->
+        <section class="border-t border-b border-brand-border/60 py-10 my-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    
+                    <!-- Item 1 -->
+                    <div class="flex items-start gap-4">
+                        <div class="text-brand-accent text-2xl pt-1">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm text-brand-dark mb-1">Ближче, ніж здається</h4>
+                            <p class="text-xs text-brand-muted leading-relaxed">Доставка Новою поштою 1–3 дні.<br>Безкоштовно від 4 000 ₴.</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="flex items-start gap-4">
+                        <div class="text-brand-accent text-2xl pt-1">
+                            <i class="fa-solid fa-box-open"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm text-brand-dark mb-1">Час на рішення</h4>
+                            <p class="text-xs text-brand-muted leading-relaxed">Обмін і повернення протягом<br>14 днів після отримання.</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="flex items-start gap-4">
+                        <div class="text-brand-accent text-2xl pt-1">
+                            <i class="fa-solid fa-ruler-horizontal"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm text-brand-dark mb-1">Саме ваш розмір</h4>
+                            <p class="text-xs text-brand-muted leading-relaxed">Допоможемо з розміром<br>і підкажемо вдалу посадку.</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="flex items-start gap-4">
+                        <div class="text-brand-accent text-2xl pt-1">
+                            <i class="fa-regular fa-comment-dots"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm text-brand-dark mb-1">Ми поруч</h4>
+                            <p class="text-xs text-brand-muted leading-relaxed">На зв'язку щодня, 10:00–19:00.<br>Пишіть — відповідає людина.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 9: NEWSLETTER SECTION -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <div class="bg-brand-box p-8 sm:p-12 lg:p-16 rounded-xs grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-6 space-y-3">
+                    <span class="text-xs tracking-widest text-brand-accent uppercase font-medium">ЗАЛИШАЙМОСЯ БЛИЖЧЕ</span>
+                    <h2 class="text-3xl sm:text-5xl font-serif-custom text-brand-dark">Тільки хороші новини.</h2>
+                    <p class="text-xs sm:text-sm text-brand-muted leading-relaxed max-w-md">
+                        Нові колекції, особливі добірки та -10% на перше замовлення. Без зайвого шуму у вашій пошті.
+                    </p>
+                </div>
+                <div class="lg:col-span-6">
+                    <form onsubmit="handleNewsletterSubmit(event)" class="space-y-4">
+                        <div class="flex items-center border-b border-brand-dark pb-2">
+                            <input type="email" id="newsletter-email" required placeholder="Ваша електронна пошта" class="w-full bg-transparent text-sm focus:outline-none placeholder:text-brand-muted text-brand-dark">
+                            <button type="submit" class="text-xs uppercase font-medium tracking-wider text-brand-dark hover:text-brand-accent flex items-center gap-2 whitespace-nowrap pl-4">
+                                <span>Підписатися</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <input type="checkbox" id="newsletter-consent" required class="mt-1 accent-brand-accent">
+                            <label for="newsletter-consent" class="text-[11px] text-brand-muted cursor-pointer">
+                                Погоджуюся з політикою конфіденційності та отриманням листів від ТИХО.
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SECTION 10: DARK FOOTER -->
+    <footer class="bg-brand-dark text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
+                
+                <!-- Col 1: Brand info -->
+                <div class="lg:col-span-2 space-y-4">
+                    <span class="font-serif-custom text-4xl font-semibold tracking-widest block">ТИХО</span>
+                    <p class="text-xs text-gray-400 max-w-sm leading-relaxed">
+                        Одяг і взуття для себе.<br>Створено в Україні, з увагою до вас.
+                    </p>
+                    <div class="pt-2">
+                        <a href="tel:+380674102026" class="text-sm font-medium hover:text-brand-bg transition-colors block">+38 (067) 410 20 26</a>
+                        <span class="text-[11px] text-gray-500">Щодня, 10:00–19:00</span>
+                    </div>
+                </div>
+
+                <!-- Col 2: Catalog -->
+                <div>
+                    <h5 class="text-xs uppercase tracking-widest text-gray-400 mb-4 font-semibold">Каталог</h5>
+                    <ul class="space-y-2 text-xs text-gray-300 font-light">
+                        <li><a href="#new" class="hover:text-white transition-colors">Новинки</a></li>
+                        <li><a href="#women" class="hover:text-white transition-colors">Жіночий одяг</a></li>
+                        <li><a href="#men" class="hover:text-white transition-colors">Чоловічий одяг</a></li>
+                        <li><a href="#footwear" class="hover:text-white transition-colors">Взуття</a></li>
+                        <li><a href="#accessories" class="hover:text-white transition-colors">Аксесуари</a></li>
+                        <li><a href="#" onclick="openToast('Подарункові сертифікати є у наявності')" class="hover:text-white transition-colors">Подарункові сертифікати</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Help -->
+                <div>
+                    <h5 class="text-xs uppercase tracking-widest text-gray-400 mb-4 font-semibold">Допомога</h5>
+                    <ul class="space-y-2 text-xs text-gray-300 font-light">
+                        <li><a href="#" onclick="openToast('Доставка Новою поштою за 1-3 дні')" class="hover:text-white transition-colors">Доставка й оплата</a></li>
+                        <li><a href="#" onclick="openToast('Обмін та повернення 14 днів')" class="hover:text-white transition-colors">Обмін і повернення</a></li>
+                        <li><a href="#" onclick="openToast('Таблиця розмірів у розробці')" class="hover:text-white transition-colors">Таблиця розмірів</a></li>
+                        <li><a href="#" onclick="openToast('Поради з догляду за виробами')" class="hover:text-white transition-colors">Догляд за речами</a></li>
+                        <li><a href="#" onclick="openToast('Поширені запитання')" class="hover:text-white transition-colors">Поширені запитання</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: TIHO Nearby -->
+                <div>
+                    <h5 class="text-xs uppercase tracking-widest text-gray-400 mb-4 font-semibold">ТИХО поруч</h5>
+                    <ul class="space-y-2 text-xs text-gray-300 font-light">
+                        <li><a href="#about" class="hover:text-white transition-colors">Про бренд</a></li>
+                        <li><a href="#journal" class="hover:text-white transition-colors">Журнал</a></li>
+                        <li><a href="#" onclick="openToast('Київ, вул. Ярославів Вал 14')" class="hover:text-white transition-colors">Наш простір у Києві</a></li>
+                        <li><a href="https://instagram.com" target="_blank" class="hover:text-white transition-colors inline-flex items-center gap-1">Інстаграм <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a></li>
+                        <li><a href="https://telegram.org" target="_blank" class="hover:text-white transition-colors inline-flex items-center gap-1">Телеграм <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Statement Banner -->
+            <div class="py-8 border-b border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <span class="font-serif-custom text-4xl sm:text-5xl text-gray-200">У своєму ритмі.</span>
+                <span class="text-xs text-gray-400 uppercase tracking-widest">З УКРАЇНИ, З ТЕПЛОМ.</span>
+            </div>
+
+            <!-- Bottom Copyright & Legal -->
+            <div class="pt-8 flex flex-col sm:flex-row justify-between items-center text-[11px] text-gray-500 gap-4">
+                <p>© 2026 ТИХО. Усі права захищено.</p>
+                <div class="flex gap-6">
+                    <a href="#" onclick="openToast('Політика конфіденційності')" class="hover:text-gray-300">Політика конфіденційності</a>
+                    <a href="#" onclick="openToast('Публічна оферта')" class="hover:text-gray-300">Публічна оферта</a>
+                    <a href="#" onclick="openToast('Захищена оплата')" class="hover:text-gray-300">Безпечна оплата партнерами</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- ================= MODALS & DRAWERS ================= -->
+
+    <!-- QUICK VIEW MODAL -->
+    <div id="quickview-modal" class="fixed inset-0 bg-black/60 backdrop-blur-custom z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-brand-bg max-w-3xl w-full rounded-xs shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col md:flex-row">
+            <button onclick="closeQuickView()" class="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-brand-dark flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="md:w-1/2 bg-brand-card relative">
+                <img id="qv-image" src="" alt="Product" class="w-full h-full object-cover min-h-[300px]">
+                <span id="qv-badge" class="absolute top-4 left-4 bg-white text-brand-dark text-[10px] uppercase tracking-wider px-2 py-1 font-semibold"></span>
+            </div>
+
+            <div class="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto">
+                <div class="space-y-4">
+                    <div>
+                        <p id="qv-subtitle" class="text-xs text-brand-muted uppercase tracking-wider"></p>
+                        <h3 id="qv-title" class="text-2xl font-serif-custom font-medium text-brand-dark"></h3>
+                        <p id="qv-price" class="text-xl font-semibold text-brand-dark mt-2"></p>
+                    </div>
+
+                    <p id="qv-desc" class="text-xs text-brand-muted leading-relaxed">
+                        М'яка високоякісна тканина, зручна посадка для щоденного носіння. Виготовлено в Україні.
+                    </p>
+
+                    <!-- Color Selector -->
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-dark uppercase tracking-wider mb-2">Колір:</label>
+                        <div id="qv-colors" class="flex gap-2"></div>
+                    </div>
+
+                    <!-- Size Selector -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-xs font-semibold text-brand-dark uppercase tracking-wider">Розмір:</label>
+                            <button onclick="openToast('Розміри відповідають стандартній сітці')" class="text-[11px] text-brand-accent underline">Таблиця розмірів</button>
+                        </div>
+                        <div class="grid grid-cols-4 gap-2 text-xs">
+                            <button onclick="selectSize(this)" class="size-btn py-2 border border-brand-border text-center hover:border-brand-dark focus:border-brand-dark focus:bg-brand-dark focus:text-white transition-all">XS</button>
+                            <button onclick="selectSize(this)" class="size-btn py-2 border border-brand-dark bg-brand-dark text-white text-center transition-all">S</button>
+                            <button onclick="selectSize(this)" class="size-btn py-2 border border-brand-border text-center hover:border-brand-dark focus:border-brand-dark focus:bg-brand-dark focus:text-white transition-all">M</button>
+                            <button onclick="selectSize(this)" class="size-btn py-2 border border-brand-border text-center hover:border-brand-dark focus:border-brand-dark focus:bg-brand-dark focus:text-white transition-all">L</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-6 border-t border-brand-border mt-6 flex gap-3">
+                    <button id="qv-add-btn" onclick="" class="flex-grow bg-brand-accent hover:bg-brand-dark text-white py-3 text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span>Додати в кошик</span>
+                    </button>
+                    <button id="qv-wishlist-btn" onclick="" class="p-3 border border-brand-border hover:border-brand-dark text-brand-dark transition-colors">
+                        <i class="fa-regular fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CART DRAWER -->
+    <div id="cart-drawer" class="fixed inset-0 bg-black/50 z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="cart-panel" class="fixed top-0 right-0 w-full max-w-md h-full bg-brand-bg shadow-2xl flex flex-col justify-between transform translate-x-full transition-transform duration-300">
+            <!-- Header -->
+            <div class="p-6 border-b border-brand-border flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <h3 class="font-serif-custom text-2xl font-medium">Ваш кошик</h3>
+                    <span id="cart-drawer-count" class="text-xs text-brand-muted">(0)</span>
+                </div>
+                <button onclick="toggleCartDrawer()" class="p-2 text-brand-dark hover:text-brand-accent">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Free Shipping Bar -->
+            <div class="bg-brand-card px-6 py-3 border-b border-brand-border">
+                <div class="flex justify-between text-xs mb-1">
+                    <span id="shipping-progress-text">До безкоштовної доставки ще ...</span>
+                    <span id="shipping-target-text" class="font-semibold">4 000 ₴</span>
+                </div>
+                <div class="w-full bg-brand-border h-1.5 rounded-full overflow-hidden">
+                    <div id="shipping-bar" class="bg-brand-accent h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Items list -->
+            <div id="cart-items-container" class="flex-grow p-6 overflow-y-auto space-y-4">
+                <!-- Empty state placeholder -->
+                <div id="cart-empty" class="text-center py-12 text-brand-muted space-y-3">
+                    <i class="fa-solid fa-bag-shopping text-4xl stroke-1 opacity-40"></i>
+                    <p class="text-sm">Ваш кошик поки що порожній.</p>
+                    <button onclick="toggleCartDrawer()" class="text-xs uppercase font-semibold text-brand-accent border-b border-brand-accent pb-0.5">Переглянути каталог</button>
+                </div>
+            </div>
+
+            <!-- Cart Footer -->
+            <div class="p-6 border-t border-brand-border bg-brand-card space-y-4">
+                <div class="space-y-1.5 text-xs">
+                    <div class="flex justify-between text-brand-muted">
+                        <span>Сума товару:</span>
+                        <span id="cart-subtotal">0 ₴</span>
+                    </div>
+                    <div class="flex justify-between text-brand-muted">
+                        <span>Доставка:</span>
+                        <span id="cart-shipping">За тарифами пошти</span>
+                    </div>
+                    <div class="flex justify-between text-base font-semibold text-brand-dark pt-2 border-t border-brand-border">
+                        <span>Разом:</span>
+                        <span id="cart-total">0 ₴</span>
+                    </div>
+                </div>
+
+                <button onclick="checkout()" class="w-full bg-brand-accent hover:bg-brand-dark text-white py-3 text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center gap-2">
+                    <span>Оформити замовлення</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- WISHLIST DRAWER -->
+    <div id="wishlist-drawer" class="fixed inset-0 bg-black/50 z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="wishlist-panel" class="fixed top-0 right-0 w-full max-w-md h-full bg-brand-bg shadow-2xl flex flex-col justify-between transform translate-x-full transition-transform duration-300">
+            <div class="p-6 border-b border-brand-border flex items-center justify-between">
+                <h3 class="font-serif-custom text-2xl font-medium">Обране</h3>
+                <button onclick="toggleWishlistDrawer()" class="p-2 text-brand-dark hover:text-brand-accent">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div id="wishlist-items-container" class="flex-grow p-6 overflow-y-auto space-y-4">
+                <div id="wishlist-empty" class="text-center py-12 text-brand-muted space-y-3">
+                    <i class="fa-regular fa-heart text-4xl opacity-40"></i>
+                    <p class="text-sm">Список обраного порожній.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH MODAL -->
+    <div id="search-modal" class="fixed inset-0 bg-black/70 backdrop-blur-custom z-50 opacity-0 pointer-events-none transition-opacity duration-300 flex items-start justify-center pt-20 px-4">
+        <div class="bg-brand-bg max-w-2xl w-full p-6 sm:p-8 rounded-xs shadow-2xl space-y-6 relative">
+            <button onclick="toggleSearchModal()" class="absolute top-6 right-6 text-brand-dark hover:text-brand-accent">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div>
+                <h3 class="font-serif-custom text-3xl font-medium mb-2">Пошук товарів</h3>
+                <div class="flex items-center border-b-2 border-brand-dark py-2">
+                    <i class="fa-solid fa-magnifying-glass text-brand-muted mr-3"></i>
+                    <input type="text" id="search-input" onkeyup="handleSearch(this.value)" placeholder="Введіть назву, наприклад: Пальто, Светр, Лофери..." class="w-full bg-transparent text-base focus:outline-none placeholder:text-brand-muted">
+                </div>
+            </div>
+
+            <!-- Quick Suggestions -->
+            <div class="space-y-2">
+                <span class="text-xs text-brand-muted uppercase tracking-wider block">Популярні запити:</span>
+                <div class="flex flex-wrap gap-2 text-xs">
+                    <button onclick="fillSearch('Пальто')" class="bg-brand-card hover:bg-brand-box px-3 py-1.5 border border-brand-border">Пальто</button>
+                    <button onclick="fillSearch('Светр')" class="bg-brand-card hover:bg-brand-box px-3 py-1.5 border border-brand-border">Светр «Теплий дотик»</button>
+                    <button onclick="fillSearch('Лофери')" class="bg-brand-card hover:bg-brand-box px-3 py-1.5 border border-brand-border">Лофери</button>
+                    <button onclick="fillSearch('Брюки')" class="bg-brand-card hover:bg-brand-box px-3 py-1.5 border border-brand-border">Брюки</button>
+                </div>
+            </div>
+
+            <div id="search-results" class="max-h-60 overflow-y-auto space-y-3 pt-2"></div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- APPLICATION JAVASCRIPT LOGIC -->
+    <script>
+        // ================= PRODUCT DATABASE =================
+        const products = [
+            {
+                id: 1,
+                title: "Пальто з вовною «Лінія»",
+                subtitle: "Вовна та кашемір",
+                colorText: "Шоколад",
+                price: 7900,
+                badge: "НОВИНКА",
+                category: "clothes",
+                isNew: true,
+                image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=800",
+                colors: ["#3D2314", "#D1C2A5"]
+            },
+            {
+                id: 2,
+                title: "Светр «Теплий дотик»",
+                subtitle: "Мериносова вовна",
+                colorText: "Молочний",
+                price: 3200,
+                badge: "",
+                category: "clothes",
+                isNew: true,
+                image: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&q=80&w=800",
+                colors: ["#F5F2EB", "#5C4A3E", "#2C2C2C"]
+            },
+            {
+                id: 3,
+                title: "Брюки прямого крою «Ритм»",
+                subtitle: "Костюмна тканина",
+                colorText: "Графіт",
+                price: 2800,
+                badge: "БЕСТСЕЛЕР",
+                category: "clothes",
+                isNew: false,
+                image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&q=80&w=800",
+                colors: ["#4A4E51", "#2C2B29"]
+            },
+            {
+                id: 4,
+                title: "Лофери «Тиха хода»",
+                subtitle: "Натуральна шкіра",
+                colorText: "Шоколад",
+                price: 4600,
+                badge: "",
+                category: "footwear",
+                isNew: false,
+                image: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&q=80&w=800",
+                colors: ["#3B2219", "#111111"]
+            },
+            {
+                id: 5,
+                title: "Черевики «Крок»",
+                subtitle: "Натуральна шкіра",
+                colorText: "Бордо",
+                price: 5200,
+                badge: "НОВИНКА",
+                category: "footwear",
+                isNew: true,
+                image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=80&w=800",
+                colors: ["#501A24", "#2B1A14"]
+            },
+            {
+                id: 6,
+                title: "Кеди «Вихідний»",
+                subtitle: "Шкіра та замша",
+                colorText: "Молочний",
+                price: 3900,
+                badge: "",
+                category: "footwear",
+                isNew: false,
+                image: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&q=80&w=800",
+                colors: ["#EDE7DF", "#8C725C"]
+            },
+            {
+                id: 7,
+                title: "Шарф «Обійми»",
+                subtitle: "100% кашемір",
+                colorText: "Бежевий",
+                price: 1800,
+                badge: "АКСЕСУАР",
+                category: "accessories",
+                isNew: false,
+                image: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&q=80&w=800",
+                colors: ["#CBB9A5", "#8C7B6B"]
+            },
+            {
+                id: 8,
+                title: "Сумка «Кросбоді ТИХО»",
+                subtitle: "Гладка шкіра",
+                colorText: "Шоколад",
+                price: 4200,
+                badge: "",
+                category: "accessories",
+                isNew: true,
+                image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&q=80&w=800",
+                colors: ["#3D2314", "#111111"]
+            }
+        ];
+
+        // Hero slides database
+        const heroSlides = [
+            {
+                title: "Мистецтво бути собою.",
+                subtitle: "М'які фактури. Вільні силуети. Речі, у яких комфортно бути — щодня, всюди, по-своєму.",
+                tagTitle: "Пальто з вовною «Лінія»",
+                tagPrice: "7 900 ₴ — До образу",
+                productId: 1,
+                image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=1200"
+            },
+            {
+                title: "Тепло, що огортає.",
+                subtitle: "Преміальна мериносова вовна та кашемір для затишних холодних днів.",
+                tagTitle: "Светр «Теплий дотик»",
+                tagPrice: "3 200 ₴ — До образу",
+                productId: 2,
+                image: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&q=80&w=1200"
+            },
+            {
+                title: "Кожен крок — впевненість.",
+                subtitle: "Зручне шкіряне взуття ручної роботи, створене для міського ритму.",
+                tagTitle: "Лофери «Тиха хода»",
+                tagPrice: "4 600 ₴ — До образу",
+                productId: 4,
+                image: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&q=80&w=1200"
+            }
+        ];
+
+        // State Store
+        let currentSlideIndex = 0;
+        let cart = [];
+        let wishlist = [];
+
+        // ================= INITIALIZATION =================
+        window.addEventListener('DOMContentLoaded', () => {
+            renderCatalog(products);
+            renderFootwearSection();
+        });
+
+        // ================= HERO SLIDER LOGIC =================
+        function updateHeroSlide() {
+            const slide = heroSlides[currentSlideIndex];
+            document.getElementById('hero-title').innerText = slide.title;
+            document.getElementById('hero-subtitle').innerText = slide.subtitle;
+            document.getElementById('hero-tag-title').innerText = slide.tagTitle;
+            document.getElementById('hero-tag-price').innerText = slide.tagPrice;
+            document.getElementById('hero-image').src = slide.image;
+            document.getElementById('slide-counter').innerText = `0${currentSlideIndex + 1} / 0${heroSlides.length}`;
+            
+            const tagContainer = document.querySelector('#hero-image').nextElementSibling;
+            tagContainer.onclick = () => openQuickView(slide.productId);
+        }
+
+        function nextHeroSlide() {
+            currentSlideIndex = (currentSlideIndex + 1) % heroSlides.length;
+            updateHeroSlide();
+        }
+
+        function prevHeroSlide() {
+            currentSlideIndex = (currentSlideIndex - 1 + heroSlides.length) % heroSlides.length;
+            updateHeroSlide();
+        }
+
+        // ================= CATALOG RENDER =================
+        function renderCatalog(items) {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = items.map(p => createProductCardHTML(p)).join('');
+        }
+
+        function renderFootwearSection() {
+            const footwearItems = products.filter(p => p.category === 'footwear').slice(0, 2);
+            const grid = document.getElementById('footwear-grid');
+            if (grid) {
+                grid.innerHTML = footwearItems.map(p => createProductCardHTML(p)).join('');
+            }
+        }
+
+        function createProductCardHTML(p) {
+            const isLiked = wishlist.some(item => item.id === p.id);
+            return `
+                <div class="group relative bg-brand-bg flex flex-col justify-between transition-all">
+                    <div class="relative aspect-[3/4] bg-brand-card overflow-hidden mb-3 cursor-pointer" onclick="openQuickView(${p.id})">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        
+                        ${p.badge ? `<span class="absolute top-3 left-3 bg-white text-brand-dark text-[10px] font-semibold tracking-wider px-2 py-0.5 uppercase">${p.badge}</span>` : ''}
+
+                        <!-- Wishlist Heart Button -->
+                        <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-brand-dark flex items-center justify-center transition-colors">
+                            <i class="${isLiked ? 'fa-solid text-brand-accent' : 'fa-regular'} fa-heart text-sm"></i>
+                        </button>
+                    </div>
+
+                    <div class="space-y-1">
+                        <h4 onclick="openQuickView(${p.id})" class="font-serif-custom text-xl font-medium text-brand-dark cursor-pointer hover:text-brand-accent transition-colors leading-snug">
+                            ${p.title}
+                        </h4>
+                        <p class="text-xs text-brand-muted font-light">${p.subtitle} • ${p.colorText}</p>
+                        
+                        <div class="flex items-center justify-between pt-2">
+                            <span class="text-sm font-semibold text-brand-dark">${p.price.toLocaleString()} ₴</span>
+                            <div class="flex items-center gap-1.5">
+                                ${p.colors.map(c => `<span class="color-dot" style="background-color: ${c}"></span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ================= FILTER TABS =================
+        function filterProducts(filter) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if (btn.dataset.filter === filter) {
+                    btn.className = "tab-btn font-medium border-b-2 border-brand-dark pb-1 text-brand-dark whitespace-nowrap active-tab";
+                } else {
+                    btn.className = "tab-btn font-medium border-b-2 border-transparent hover:border-brand-muted text-brand-muted hover:text-brand-dark pb-1 whitespace-nowrap";
+                }
+            });
+
+            if (filter === 'all') {
+                renderCatalog(products);
+            } else {
+                const filtered = products.filter(p => p.category === filter);
+                renderCatalog(filtered);
+            }
+        }
+
+        function filterCategory(cat) {
+            const catalogSection = document.getElementById('catalog-section');
+            catalogSection.scrollIntoView({ behavior: 'smooth' });
+            filterProducts(cat);
+        }
+
+        function scrollToCatalog() {
+            document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ================= QUICK VIEW MODAL =================
+        let selectedQuickViewProduct = null;
+
+        function openQuickView(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+            selectedQuickViewProduct = product;
+
+            document.getElementById('qv-image').src = product.image;
+            document.getElementById('qv-title').innerText = product.title;
+            document.getElementById('qv-subtitle').innerText = `${product.subtitle} • ${product.colorText}`;
+            document.getElementById('qv-price').innerText = `${product.price.toLocaleString()} ₴`;
+            document.getElementById('qv-badge').innerText = product.badge;
+
+            // Render colors
+            const colorsContainer = document.getElementById('qv-colors');
+            colorsContainer.innerHTML = product.colors.map((c, idx) => `
+                <button class="w-6 h-6 rounded-full border border-brand-border flex items-center justify-center focus:ring-2 focus:ring-brand-accent" style="background-color: ${c}">
+                    ${idx === 0 ? '<i class="fa-solid fa-check text-[10px] text-white drop-shadow"></i>' : ''}
+                </button>
+            `).join('');
+
+            // Wishlist button state
+            const isLiked = wishlist.some(i => i.id === product.id);
+            document.getElementById('qv-wishlist-btn').innerHTML = `<i class="${isLiked ? 'fa-solid text-brand-accent' : 'fa-regular'} fa-heart text-base"></i>`;
+            document.getElementById('qv-wishlist-btn').onclick = () => toggleWishlist(product.id);
+
+            document.getElementById('qv-add-btn').onclick = () => {
+                addToCart(product);
+                closeQuickView();
+            };
+
+            const modal = document.getElementById('quickview-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeQuickView() {
+            const modal = document.getElementById('quickview-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function selectSize(btn) {
+            document.querySelectorAll('.size-btn').forEach(b => {
+                b.className = "size-btn py-2 border border-brand-border text-center hover:border-brand-dark transition-all";
+            });
+            btn.className = "size-btn py-2 border border-brand-dark bg-brand-dark text-white text-center transition-all";
+        }
+
+        // ================= CART SYSTEM =================
+        function addToCart(product) {
+            const existing = cart.find(item => item.id === product.id);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1, selectedSize: 'S' });
+            }
+            updateCartUI();
+            openToast(`«${product.title}» додано в кошик`);
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+        }
+
+        function changeQuantity(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+            item.quantity += delta;
+            if (item.quantity <= 0) {
+                removeFromCart(id);
+            } else {
+                updateCartUI();
+            }
+        }
+
+        function updateCartUI() {
+            // Count
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').innerText = totalCount;
+            document.getElementById('cart-drawer-count').innerText = `(${totalCount})`;
+
+            // Subtotal
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cart-subtotal').innerText = `${subtotal.toLocaleString()} ₴`;
+            document.getElementById('cart-total').innerText = `${subtotal.toLocaleString()} ₴`;
+
+            // Free shipping bar (target 4000)
+            const freeTarget = 4000;
+            const progress = Math.min((subtotal / freeTarget) * 100, 100);
+            document.getElementById('shipping-bar').style.width = `${progress}%`;
+
+            if (subtotal >= freeTarget) {
+                document.getElementById('shipping-progress-text').innerText = "Вам доступна безкоштовна доставка!";
+            } else {
+                const diff = freeTarget - subtotal;
+                document.getElementById('shipping-progress-text').innerText = `До безкоштовної доставки ще ${diff.toLocaleString()} ₴`;
+            }
+
+            // Container HTML
+            const container = document.getElementById('cart-items-container');
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div id="cart-empty" class="text-center py-12 text-brand-muted space-y-3">
+                        <i class="fa-solid fa-bag-shopping text-4xl stroke-1 opacity-40"></i>
+                        <p class="text-sm">Ваш кошик поки що порожній.</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = cart.map(item => `
+                    <div class="flex gap-4 pb-4 border-b border-brand-border">
+                        <img src="${item.image}" alt="${item.title}" class="w-16 h-20 object-cover bg-brand-card">
+                        <div class="flex-grow flex flex-col justify-between">
+                            <div class="flex justify-between">
+                                <div>
+                                    <h5 class="text-sm font-serif-custom font-semibold text-brand-dark leading-tight">${item.title}</h5>
+                                    <p class="text-[11px] text-brand-muted">Розмір: ${item.selectedSize} • ${item.colorText}</p>
+                                </div>
+                                <button onclick="removeFromCart(${item.id})" class="text-brand-muted hover:text-red-700 text-xs"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div class="flex justify-between items-center pt-2">
+                                <div class="flex items-center border border-brand-border px-2 py-0.5 gap-3 text-xs bg-white">
+                                    <button onclick="changeQuantity(${item.id}, -1)">-</button>
+                                    <span>${item.quantity}</span>
+                                    <button onclick="changeQuantity(${item.id}, 1)">+</button>
+                                </div>
+                                <span class="text-xs font-semibold text-brand-dark">${(item.price * item.quantity).toLocaleString()} ₴</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cart-drawer');
+            const panel = document.getElementById('cart-panel');
+            const isOpen = !drawer.classList.contains('opacity-0');
+
+            if (isOpen) {
+                panel.classList.add('translate-x-full');
+                drawer.classList.add('opacity-0', 'pointer-events-none');
+            } else {
+                drawer.classList.remove('opacity-0', 'pointer-events-none');
+                panel.classList.remove('translate-x-full');
+            }
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                openToast('Ваш кошик порожній');
+                return;
+            }
+            openToast('Дякуємо! Ваше замовлення успішно прийнято в обробку.');
+            cart = [];
+            updateCartUI();
+            toggleCartDrawer();
+        }
+
+        // ================= WISHLIST SYSTEM =================
+        function toggleWishlist(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            const index = wishlist.findIndex(item => item.id === id);
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                openToast(`Видалено з обраного: «${product.title}»`);
+            } else {
+                wishlist.push(product);
+                openToast(`Додано в обране: «${product.title}»`);
+            }
+
+            updateWishlistUI();
+            renderCatalog(products); // Refresh icons in catalog
+            if (selectedQuickViewProduct) openQuickView(selectedQuickViewProduct.id);
+        }
+
+        function updateWishlistUI() {
+            const countElem = document.getElementById('wishlist-count');
+            countElem.innerText = wishlist.length;
+            if (wishlist.length > 0) {
+                countElem.classList.remove('hidden');
+            } else {
+                countElem.classList.add('hidden');
+            }
+
+            const container = document.getElementById('wishlist-items-container');
+            if (wishlist.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-brand-muted space-y-3">
+                        <i class="fa-regular fa-heart text-4xl opacity-40"></i>
+                        <p class="text-sm">Список обраного порожній.</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = wishlist.map(item => `
+                    <div class="flex gap-4 pb-4 border-b border-brand-border items-center justify-between">
+                        <div class="flex gap-3 items-center">
+                            <img src="${item.image}" alt="${item.title}" class="w-14 h-16 object-cover bg-brand-card">
+                            <div>
+                                <h5 class="text-sm font-serif-custom font-semibold text-brand-dark">${item.title}</h5>
+                                <p class="text-xs text-brand-muted">${item.price.toLocaleString()} ₴</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="addToCart(products.find(p => p.id === ${item.id}))" class="bg-brand-accent text-white px-3 py-1.5 text-xs font-semibold hover:bg-brand-dark transition-colors">В кошик</button>
+                            <button onclick="toggleWishlist(${item.id})" class="text-brand-muted hover:text-red-700 p-1.5"><i class="fa-solid fa-trash text-xs"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function toggleWishlistDrawer() {
+            const drawer = document.getElementById('wishlist-drawer');
+            const panel = document.getElementById('wishlist-panel');
+            const isOpen = !drawer.classList.contains('opacity-0');
+
+            if (isOpen) {
+                panel.classList.add('translate-x-full');
+                drawer.classList.add('opacity-0', 'pointer-events-none');
+            } else {
+                drawer.classList.remove('opacity-0', 'pointer-events-none');
+                panel.classList.remove('translate-x-full');
+            }
+        }
+
+        // ================= SEARCH MODAL =================
+        function toggleSearchModal() {
+            const modal = document.getElementById('search-modal');
+            const isOpen = !modal.classList.contains('opacity-0');
+            if (isOpen) {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            } else {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                document.getElementById('search-input').focus();
+            }
+        }
+
+        function handleSearch(query) {
+            const resultsContainer = document.getElementById('search-results');
+            if (!query.trim()) {
+                resultsContainer.innerHTML = '';
+                return;
+            }
+
+            const matches = products.filter(p => p.title.toLowerCase().includes(query.toLowerCase()) || p.subtitle.toLowerCase().includes(query.toLowerCase()));
+            
+            if (matches.length === 0) {
+                resultsContainer.innerHTML = `<p class="text-xs text-brand-muted py-2">Нічого не знайдено за запитом "${query}"</p>`;
+            } else {
+                resultsContainer.innerHTML = matches.map(p => `
+                    <div onclick="openQuickView(${p.id}); toggleSearchModal();" class="flex items-center gap-3 p-2 hover:bg-brand-card cursor-pointer transition-colors border-b border-brand-border/40">
+                        <img src="${p.image}" class="w-10 h-12 object-cover">
+                        <div>
+                            <p class="text-xs font-semibold text-brand-dark">${p.title}</p>
+                            <p class="text-[11px] text-brand-muted">${p.price.toLocaleString()} ₴</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function fillSearch(text) {
+            const input = document.getElementById('search-input');
+            input.value = text;
+            handleSearch(text);
+        }
+
+        // ================= MOBILE NAVIGATION =================
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const panel = menu.querySelector('.id-mobile-panel');
+            const isOpen = !menu.classList.contains('opacity-0');
+
+            if (isOpen) {
+                panel.classList.add('-translate-x-full');
+                menu.classList.add('opacity-0', 'pointer-events-none');
+            } else {
+                menu.classList.remove('opacity-0', 'pointer-events-none');
+                panel.classList.remove('-translate-x-full');
+            }
+        }
+
+        // ================= NEWSLETTER HANDLER =================
+        function handleNewsletterSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('newsletter-email').value;
+            openToast(`Дякуємо! ${email} підписано. Ваш промокод: TIHO10`);
+            document.getElementById('newsletter-email').value = '';
+        }
+
+        // ================= TOAST NOTIFICATION UTILITY =================
+        function openToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = "bg-brand-dark text-white text-xs px-5 py-3.5 shadow-xl rounded-xs flex items-center gap-3 transform translate-y-4 opacity-0 transition-all duration-300 pointer-events-auto border-l-2 border-brand-accent";
+            toast.innerHTML = `
+                <i class="fa-solid fa-circle-check text-brand-accent"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+
+            // Animate In
+            setTimeout(() => {
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            }, 50);
+
+            // Animate Out
+            setTimeout(() => {
+                toast.classList.add('translate-y-4', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
